@@ -26,7 +26,8 @@ function init() {
 
   // a játék kezdetekor a kockát eltüntetjük 
   // inline style-t adunk hozzá az img-hez
-  document.querySelector('.dice').style.display = 'none';
+  document.querySelector('#dice-1').style.display = 'none';
+  document.querySelector('#dice-2').style.display = 'none';
   // a gombokat megjelenítjük
   document.querySelector('.btn-roll').style.display = 'block';
   document.querySelector('.btn-hold').style.display = 'block';
@@ -47,22 +48,30 @@ document.querySelector('.btn-new').addEventListener('click', init)
 
 // ha a roll dice gombra kattint az user
 document.querySelector('.btn-roll').addEventListener('click', function () {
-  console.log('rolling the dice...');
+  console.log('rolling the dices...');
   // 1. generálunk egy random számot 1-6 között
-  let dice = Math.floor(Math.random() * 6) + 1;
-  console.log(dice);
+  let dice1 = Math.floor(Math.random() * 6) + 1;
+  console.log('dice1 roll: ' + dice1);
   // 2. az eredményt megjelenítjük a UI-n
-  let diceDOM = document.querySelector('.dice');
-  diceDOM.style.display = 'block';
+  let dice1DOM = document.querySelector('#dice-1');
+  dice1DOM.style.display = 'block';
   // string concatenation, sztring összefűzés 'dice-'+dice'.png'
-  diceDOM.setAttribute('src', 'dice-' + dice + '.png');
+  dice1DOM.setAttribute('src', 'dice-' + dice1 + '.png');
+
+  let dice2 = Math.floor(Math.random() * 6) + 1;
+  console.log('dice2 roll: ' + dice2);
+  // 2. az eredményt megjelenítjük a UI-n
+  let dice2DOM = document.querySelector('#dice-2');
+  dice2DOM.style.display = 'block';
+  // string concatenation, sztring összefűzés 'dice-'+dice'.png'
+  dice2DOM.setAttribute('src', 'dice-' + dice2 + '.png');
 
 
   // Ha a játékos 1-est dob, a roundScore értékét elveszti, és a következő játékos jön
 
-  if (dice !== 1) {
+  if ((dice1 !== 1) && (dice2 !== 1)) {
     // A dobott értéket kiszámoljuk majd megjelenítjük a piros dobozban
-    roundScore = roundScore + dice;
+    roundScore = roundScore + dice1 + dice2;
 
     document.querySelector('#current-' + activePlayer).textContent = roundScore;
 
@@ -104,7 +113,8 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
     document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
     document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
     document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
-    document.querySelector('.dice').style.display = 'none';
+    document.querySelector('#dice-1').style.display = 'none';
+    document.querySelector('#dice-2').style.display = 'none';
     document.querySelector('.btn-roll').style.display = 'none';
     document.querySelector('.btn-hold').style.display = 'none';
 
