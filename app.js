@@ -15,6 +15,9 @@ function init() {
   // mindig az első játékos kezd
   activePlayer = 0;
 
+  // Házi (homework1) beállítom egy tömbben az előző dobás változóját játékosonként
+  previousDices = [0, 0];
+
   // beállítjuk a kezdőértékeket a UI-n is (a html-ben) - dinamikusan itt tudjuk állítani
 
   document.querySelector('#score-0').textContent = 0;
@@ -50,7 +53,8 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
   console.log('rolling the dice...');
   // 1. generálunk egy random számot 1-6 között
   let dice = Math.floor(Math.random() * 6) + 1;
-  console.log(dice);
+  // Házi feladat (homework1): kiíratom az aktív játékos current dobását a konzolra
+  console.log('current dice of player' + activePlayer + ': ' + dice);
   // 2. az eredményt megjelenítjük a UI-n
   let diceDOM = document.querySelector('.dice');
   diceDOM.style.display = 'block';
@@ -58,15 +62,20 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
   diceDOM.setAttribute('src', 'dice-' + dice + '.png');
 
 
-  // Ha a játékos 1-est dob, a roundScore értékét elveszti, és a következő játékos jön
+  // Házi feladat (homework1): ha 6-ost dob 2-szer, akkor játékosváltás történik és elveszti minden pontját
 
-  if (dice !== 1) {
-    // A dobott értéket kiszámoljuk majd megjelenítjük a piros dobozban
+  // previousDices[activePlayer] = 6; ez volt a gyorsteszthez a parancs (erőltetett tesztelés) a házihoz, hogy működik-e
+
+  // kiíratom a konzolra az aktuális játékos előző dobását
+  console.log('previous dice of player' + activePlayer + ': ' + previousDices[activePlayer]);
+  if ((dice !== 6) || (previousDices[activePlayer] !== 6)) {
+
     roundScore = roundScore + dice;
+
+    previousDices[activePlayer] = dice;
 
     document.querySelector('#current-' + activePlayer).textContent = roundScore;
 
-    // ha a játékos 1-est dobott
   } else {
     nextPlayer();
   }
@@ -112,3 +121,5 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
     nextPlayer();
   }
 });
+
+
