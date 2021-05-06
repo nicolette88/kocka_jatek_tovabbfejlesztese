@@ -64,18 +64,26 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
 
   // Házi feladat (homework1): ha 6-ost dob 2-szer, akkor játékosváltás történik és elveszti minden pontját
 
-  // previousDices[activePlayer] = 6; ez volt a gyorsteszthez a parancs (erőltetett tesztelés) a házihoz, hogy működik-e
-
   // kiíratom a konzolra az aktuális játékos előző dobását
   console.log('previous dice of player' + activePlayer + ': ' + previousDices[activePlayer]);
-  if ((dice !== 6) || (previousDices[activePlayer] !== 6)) {
+  // megadom az if függvénynek, hogy ha 6-os dob illetve korábban 6-ost dobott, akkor fusson le a nextPlayer
+  if ((dice === 6) && (previousDices[activePlayer] === 6)) {
+    scores[activePlayer] = 0;
+    document.querySelector('#score-' + activePlayer).textContent = 0;
+    nextPlayer();
+  }
 
+  // Letárolom a tömbben az aktuális játékos előző dobását
+  previousDices[activePlayer] = dice;
+
+  // Ha a játékos 1-est dob, a roundScore értékét elveszti, és a következő játékos jön
+  if (dice !== 1) {
+    // A dobott értéket kiszámoljuk majd megjelenítjük a piros dobozban
     roundScore = roundScore + dice;
-
-    previousDices[activePlayer] = dice;
 
     document.querySelector('#current-' + activePlayer).textContent = roundScore;
 
+    // ha a játékos 1-est dobott
   } else {
     nextPlayer();
   }
