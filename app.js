@@ -18,6 +18,9 @@ function init() {
   // Házi (homework1) beállítom egy tömbben az előző dobás változóját játékosonként
   previousDices = [0, 0];
 
+  // Házi (homework2) létrehozom a finalScore változót, aminek az értéke alapértelmezetten 100
+  finalScore = 100;
+
   // beállítjuk a kezdőértékeket a UI-n is (a html-ben) - dinamikusan itt tudjuk állítani
 
   document.querySelector('#score-0').textContent = 0;
@@ -47,7 +50,6 @@ function init() {
 
 init();
 document.querySelector('.btn-new').addEventListener('click', init)
-
 // ha a roll dice gombra kattint az user
 document.querySelector('.btn-roll').addEventListener('click', function () {
   console.log('rolling the dice...');
@@ -64,23 +66,31 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
 
   // Házi feladat (homework1): ha 6-ost dob 2-szer, akkor játékosváltás történik és elveszti minden pontját
 
-  // previousDices[activePlayer] = 6; ez volt a gyorsteszthez a parancs (erőltetett tesztelés) a házihoz, hogy működik-e
-
   // kiíratom a konzolra az aktuális játékos előző dobását
   console.log('previous dice of player' + activePlayer + ': ' + previousDices[activePlayer]);
-  if ((dice !== 6) || (previousDices[activePlayer] !== 6)) {
-
-    roundScore = roundScore + dice;
-
-    previousDices[activePlayer] = dice;
-
-    document.querySelector('#current-' + activePlayer).textContent = roundScore;
-
-  } else {
+  // megadom az if függvénynek, hogy ha 6-os dob illetve korábban 6-ost dobott, akkor fusson le a nextPlayer
+  if ((dice === 6) && (previousDices[activePlayer] === 6)) {
+    scores[activePlayer] = 0;
+    document.querySelector('#score-' + activePlayer).textContent = 0;
     nextPlayer();
   }
 
+  // Letárolom a tömbben az aktuális játékos előző dobását
+  previousDices[activePlayer] = dice;
+
+  // Ha a játékos 1-est dob, a roundScore értékét elveszti, és a következő játékos jön
+  if (dice !== 1) {
+    // A dobott értéket kiszámoljuk majd megjelenítjük a piros dobozban
+    roundScore = roundScore + dice;
+
+    document.querySelector('#current-' + activePlayer).textContent = roundScore;
+
+    // ha a játékos 1-est dobott
+  } else {
+    nextPlayer();
+  }
 });
+
 
 // DRY: do not repeat yourself
 
@@ -99,6 +109,20 @@ function nextPlayer() {
   document.querySelector('.player-1-panel').classList.toggle('active');
 }
 
+
+// Házi feladat (homework2)
+// Ha a játékos rákattint a new button gombra, akkor állítjuk be a finalScore-t
+document.querySelector('.btn-new').addEventListener('click', function () {
+  if (parseInt(document.getElementsByClassName('final-score')[0].value) >= 0) {
+    finalScore = parseInt(document.getElementsByClassName('final-score')[0].value);
+  }
+  else {
+    finalScore = 100;
+  }
+  console.log('finalScore: ' + finalScore);
+});
+
+
 // ha a hold gombra rányom a játékos
 document.querySelector('.btn-hold').addEventListener('click', function () {
   // a játékos megszerzi a kör alatt szerzett pontjait
@@ -108,7 +132,7 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
   document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
   // ellenőrizzük, hogy van-e nyertes
-  if (scores[activePlayer] >= 20) {
+  if (scores[activePlayer] >= finalScore) {
     // a játék vége
     document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
     document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
